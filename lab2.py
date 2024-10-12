@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 
 from glfw.GLFW import *
@@ -6,23 +5,37 @@ from glfw.GLFW import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-CONST_WINDOW_WIDTH = 1400
-CONST_WINDOW_HEIGHT = 800
+import random
+
+CONST_WINDOW_WIDTH = 800
+CONST_WINDOW_HEIGHT = 600
 
 def startup():
     update_viewport(None, CONST_WINDOW_WIDTH, CONST_WINDOW_HEIGHT)
     glClearColor(0.5, 0.5, 0.5, 1.0)
+    random.seed()
+    getRandomDeformation()
+    getRandomColor()
 
+def getRandomDeformation():
+    global randomDeformation
+    randomDeformation = random.random()
+
+def getRandomColor():
+    global randomColor
+    red = random.randint(0, 255)
+    green = random.randint(0, 255)
+    blue = random.randint(0, 255)
+    randomColor = (red, green, blue)
 
 def shutdown():
     pass
 
-
 def render(time):
     glClear(GL_COLOR_BUFFER_BIT)
 
-    drawMulticolorTriangle()  
-    drawRect(0.0, 0.0, 100, 100)  
+    # drawMulticolorTriangle()  
+    drawRect(0.0, 0.0, 100, 150, randomDeformation, randomColor)  
 
     glFlush()
 
@@ -47,32 +60,6 @@ def update_viewport(window, width, height):
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
 
-def drawRect(x, y, width, height):
-    width = width / 2
-    height = height / 2
-
-    top_left = (x - width, y + height)
-    top_right = (x + width, y + height)
-    bottom_left = (x - width, y - height)
-    bottom_right = (x + width, y - height)
-
-    glColor3ub(33, 113, 33)
-    drawTriangle(top_left, bottom_left, bottom_right)
-
-    glColor3ub(13, 33, 7)
-    drawTriangle(top_left, bottom_right, top_right)
-
-
-def drawTriangle(v1, v2, v3):
-    glBegin(GL_TRIANGLES)
-    
-    glVertex2f(v1[0], v1[1])
-    glVertex2f(v2[0], v2[1])
-    glVertex2f(v3[0], v3[1])
-    
-    glEnd()
-    
-
 def drawMulticolorTriangle():
     glBegin(GL_TRIANGLES)
 
@@ -85,6 +72,28 @@ def drawMulticolorTriangle():
     glColor3f(0.0, 0.0, 1.0)
     glVertex2f(50.0, -50.0)
 
+    glEnd()
+
+def drawRect(x, y, width, height, d = 0.0, color = (130, 230, 70)):
+    width = (width / 2) * d
+    height = (height / 2) * d
+
+    top_left = (x - width, y + height)
+    top_right = (x + width, y + height)
+    bottom_left = (x - width, y - height)
+    bottom_right = (x + width, y - height)
+
+    glColor3ub(*color)
+    drawTriangle(top_left, bottom_left, bottom_right)
+    drawTriangle(top_left, bottom_right, top_right)
+
+def drawTriangle(v1, v2, v3):
+    glBegin(GL_TRIANGLES)
+    
+    glVertex2f(v1[0], v1[1])
+    glVertex2f(v2[0], v2[1])
+    glVertex2f(v3[0], v3[1])
+    
     glEnd()
 
 def main():
