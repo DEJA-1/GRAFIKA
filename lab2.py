@@ -35,7 +35,7 @@ def render(time):
     glClear(GL_COLOR_BUFFER_BIT)
 
     # drawMulticolorTriangle()  
-    drawRect(0.0, 0.0, 100, 150, randomDeformation, randomColor)  
+    drawRect(0.0, 0.0, 100, 150, d = randomDeformation, color = randomColor)  
 
     glFlush()
 
@@ -75,8 +75,12 @@ def drawMulticolorTriangle():
     glEnd()
 
 def drawRect(x, y, width, height, d = 0.0, color = (130, 230, 70)):
-    width = (width / 2) * d
-    height = (height / 2) * d
+    width = (width / 2)
+    height = (height / 2)
+
+    if (d > 0.0):
+        width = width * d
+        height = height * d
 
     top_left = (x - width, y + height)
     top_right = (x + width, y + height)
